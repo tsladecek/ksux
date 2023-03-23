@@ -5,8 +5,7 @@ from pydantic import BaseModel, validator
 
 
 class Target(BaseModel):
-    group: str
-    version: str
+    apiVersion: str
     kind: str
     name: str
 

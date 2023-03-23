@@ -1,2 +1,4 @@
 .idea
 *pycache*
+examples/out/*.yaml
+examples/out/*.yml

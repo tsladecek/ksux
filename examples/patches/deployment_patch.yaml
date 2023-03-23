@@ -1,0 +1,10 @@
+- name: deployment_image_tag_patch
+  target:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web
+  ops:
+    - name: replace_image
+      path: /spec/template/spec/containers/nginx/image
+      value: nginx:1.23
+      action: replace

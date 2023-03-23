@@ -1,0 +1,10 @@
+- name: service
+  target:
+    apiVersion: v1
+    kind: Service
+    name: nginx-service
+  ops:
+    - name: add_https_port
+      path: /spec/ports
+      value: "{'name': 'https', 'port': 443, 'protocol': 'TCP', 'targetPort': 443}"
+      action: add
