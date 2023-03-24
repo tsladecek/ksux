@@ -2,3 +2,4 @@
 *pycache*
 examples/out/*.yaml
 examples/out/*.yml
+examples/out/*.json

@@ -1,4 +1,5 @@
 import json
+import logging
 from json import JSONDecodeError
 from pathlib import Path
 
@@ -10,7 +11,7 @@ def read_json(path: str):
         try:
             decoded = json.load(f)
         except JSONDecodeError:
-            print(f'Failed to parse {path}. JSON invalid')
+            logging.error(f'Failed to parse {path}. JSON invalid')
             exit(1)
         else:
             return decoded
@@ -20,7 +21,7 @@ def read_yaml(path: str):
     try:
         decoded = safe_load(Path(path).read_text())
     except YAMLError as exc:
-        print(f'Failed to parse {path}. YAML invalid')
+        logging.error(f'Failed to parse {path}. YAML invalid')
         exit(1)
     else:
         return decoded

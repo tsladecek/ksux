@@ -1,0 +1,28 @@
+[
+  {
+    "name": "configmap_patch",
+    "target": {
+      "apiVersion": "v1",
+      "kind": "ConfigMap",
+      "name": "web"
+    },
+    "ops": [
+      {
+        "name": "add_key",
+        "path": "/data",
+        "action": "add",
+        "value": {
+          "Tyger_tyger": "burning_bright",
+          "in_the_forests": "of_the_night",
+          "what_immortal": "hand_or_eye",
+          "could_frame": "thy_fearful_symmetry"
+        }
+      },
+      {
+        "name": "add_key",
+        "path": "/data/key1",
+        "action": "remove"
+      }
+    ]
+  }
+]
