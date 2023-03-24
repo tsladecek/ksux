@@ -22,4 +22,4 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/tsladecek/ksux"
 [project.scripts]
-ksux = "ksux:__main__"
+ksux = "ksux:main"
