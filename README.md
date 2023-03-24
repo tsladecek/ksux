@@ -8,6 +8,8 @@ This is a python package. So the only requirements are `python3` and `pip`
 
 ## Installation
 
+### Local
+
 - Optional: Create a virtual env.
 
 ```shell
@@ -29,6 +31,10 @@ conda activate ksux
 ```shell
 pip install ksux
 ```
+
+### In CI
+
+use the [docker image](https://hub.docker.com/r/tsladecek/ksux)
 
 ## How does it work?
 
