@@ -51,7 +51,7 @@ jobs:
         with:
           fallback: 0.1.0
       - name: sleep because pypi takes time
-        run: sleep 20
+        run: sleep 60
       - name: build and push
         run: |
           IMAGE_TAG=tsladecek/ksux:${{ steps.previoustag.outputs.tag }}
