@@ -52,7 +52,7 @@ jobs:
           fallback: 0.1.0
       - name: wait until package is published to pypi
         run: |
-          while true:
+          while true;
           do
             if [[ "$(pip index versions ksux)" == *"${{ steps.previoustag.outputs.tag }}"* ]]; then
               break
