@@ -9,11 +9,11 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument('-b', '--base_dir', help='Base directory with yaml/yml/json kubernetes templates')
-    parser.add_argument('-o', '--out_dir',
-                        help='Output directory.')
+    parser.add_argument('-o', '--out_dir', help='Output directory', default='out')
     parser.add_argument('-p', '--patches_dir',
                         help='Patches directory. Script will read only files with yaml/yml/json extensions')
-    parser.add_argument('-e', '--out_ext', help='Extension of output files', choices=['yaml', 'json', 'yml'])
+    parser.add_argument('-e', '--out_ext', help='Extension of output files', choices=['yaml', 'json', 'yml'],
+                        default='yaml')
     parser.add_argument('--dry-run', help='Print manifests to stdout', action="store_true")
 
     args = parser.parse_args()
@@ -28,5 +28,5 @@ if __name__ == "__main__":
 
         yaml_manifests = '---\n'.join(yaml_manifests)
         print(yaml_manifests)
-
-    save_manifests(patched_manifests=manifests, out_dir=args.out_dir, extension=args.out_ext)
+    else:
+        save_manifests(patched_manifests=manifests, out_dir=args.out_dir, extension=args.out_ext)

@@ -12,6 +12,9 @@ def save_manifests(
         out_dir: str,
         extension: str
 ) -> None:
+
+    os.system(f'mkdir -p {out_dir}')
+
     for p in patched_manifests:
         output_path = os.path.join(
             out_dir,

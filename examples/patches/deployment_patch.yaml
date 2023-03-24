@@ -1,4 +1,4 @@
-- name: deployment_image_tag_patch
+- name: deployment_patches
   target:
     apiVersion: apps/v1
     kind: Deployment
