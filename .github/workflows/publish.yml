@@ -42,11 +42,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: pip-publish
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Get Previous tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
         with:
-          fallback: 0.1.0 # Optional fallback tag to use when no tag can be found
+          fallback: 0.1.0
       - name: build and push
         run: |
           IMAGE_TAG=tsladecek/ksux:${{ steps.previoustag.outputs.tag }}
