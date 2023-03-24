@@ -50,8 +50,15 @@ jobs:
         uses: WyriHaximus/github-action-get-previous-tag@v1
         with:
           fallback: 0.1.0
-      - name: sleep because pypi takes time
-        run: sleep 60
+      - name: wait until package is published to pypi
+        run: |
+          while true:
+          do
+            if [[ "$(pip index versions ksux)" == *"${{ steps.previoustag.outputs.tag }}"* ]]; then
+              break
+            else echo "Waiting until package is published" && sleep 10
+            fi
+          done
       - name: build and push
         run: |
           IMAGE_TAG=tsladecek/ksux:${{ steps.previoustag.outputs.tag }}
