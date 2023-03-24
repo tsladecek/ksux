@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "ksux"
+version = "0.0.1"
+authors = [
+    { name = "Tomas Sladecek" }
+]
+description = "Easy customization of kubernetes manifests"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pydantic >= 1.10, < 2",
+    "pyyaml >= 6.0, < 7",
+]
+[project.urls]
+"Homepage" = "https://github.com/tsladecek/ksux"
+[project.scripts]
+ksux = "ksux:app"
