@@ -4,4 +4,4 @@ ARG VERSION
 
 RUN pip install ksux==$VERSION
 
-ENTRYPOINT ["ksux"]
+ENTRYPOINT ["/bin/sh"]
