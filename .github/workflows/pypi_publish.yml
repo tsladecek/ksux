@@ -30,6 +30,7 @@ jobs:
         VERSION=${{ steps.previoustag.outputs.tag }}
         echo $VERSION
         sed -i "s/0.0.1/$VERSION/g" pyproject.toml
+        sed -i "s/VERSION/$VERSION/g" src/ksux/__init__.py
     - name: Build package
       run: python -m build
     - name: Publish package

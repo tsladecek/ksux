@@ -5,3 +5,4 @@ examples/out/*.yml
 examples/out/*.json
 out/
 dist/
+*egg-info*

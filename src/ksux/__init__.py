@@ -16,8 +16,13 @@ def main():
     parser.add_argument('-e', '--out_ext', help='Extension of output files', choices=['yaml', 'json', 'yml'],
                         default='yaml')
     parser.add_argument('--dry-run', help='Print manifests to stdout', action="store_true")
+    parser.add_argument('--version', help='Package version', action="store_true")
 
     args = parser.parse_args()
+
+    if args.version:
+        print('VERSION')
+        exit(0)
 
     manifests = patch_manifests(base_dir=args.base_dir, patches_dir=args.patches_dir)
 
