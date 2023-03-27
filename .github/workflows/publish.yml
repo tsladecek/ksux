@@ -61,7 +61,8 @@ jobs:
           done
       - name: build and push
         run: |
-          IMAGE_TAG=tsladecek/ksux:${{ steps.previoustag.outputs.tag }}
+          IMAGE_NAME=tsladecek/ksux
+          VERSION=${{ steps.previoustag.outputs.tag }}
           echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u tsladecek --password-stdin
-          docker build -t $IMAGE_TAG --build-arg VERSION=${{ steps.previoustag.outputs.tag }} .
-          docker push $IMAGE_TAG
+          docker build -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest --build-arg VERSION=$VERSION .
+          docker push $IMAGE_NAME --all-tags
