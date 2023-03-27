@@ -46,10 +46,14 @@ def read_manifests(base_dir: str) -> Dict:
         file_path = os.path.join(base_dir, m)
         if m.endswith('yaml') or m.endswith('yml'):
             temp = read_yaml(file_path)
-            add_manifest(manifests, temp)
         elif m.endswith('.json'):
             temp = read_json(file_path)
-            add_manifest(manifests, temp)
+        else:
+            logging.info(f'Unknown extension ".{m.split(".")[-1]}". Skipping...')
+            continue
+
+        for manifest in temp:
+            add_manifest(manifests, manifest)
 
     return manifests
 

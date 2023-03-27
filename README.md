@@ -97,7 +97,7 @@ ops:
     action: <add|replace|remove>
 ```
 
-each patch file must be a list of patches. E.g.:
+each patch file can be a list of patches. You can use the classic yaml format, e.g.:
 
 ```yaml
 - name: deployment_patches
@@ -128,6 +128,41 @@ each patch file must be a list of patches. E.g.:
       path: /spec/ports/http/name
       action: replace
       value: new_name
+```
+
+or use the `---` separator:
+
+```yaml
+---
+name: deployment_patches
+target:
+  apiVersion: apps/v1
+  kind: Deployment
+  name: web
+ops:
+- name: replace_image
+  path: /spec/template/spec/containers/nginx/image
+  value: nginx:1.23
+  action: replace
+---
+name: service_patches
+target:
+  apiVersion: v1
+  kind: Service
+  name: nginx-service
+ops:
+- name: add_https_port
+  path: /spec/ports
+  value:
+    name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  action: add
+- name: rename_http_port
+  path: /spec/ports/http/name
+  action: replace
+  value: new_name
 ```
 
 Then all you need to do, is run:
