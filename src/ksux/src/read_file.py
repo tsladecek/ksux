@@ -3,8 +3,8 @@ import logging
 from json import JSONDecodeError
 from typing import Dict, List, Union
 
-import yaml
-from yaml import YAMLError
+from ruamel.yaml import round_trip_load, CommentedMap, CommentedSeq
+from ruamel.yaml.composer import ComposerError
 
 
 def read_json(path: str) -> List[Dict]:
@@ -21,17 +21,17 @@ def read_json(path: str) -> List[Dict]:
             return decoded
 
 
-def load_yaml(yaml_str: str, path: str) -> Union[Dict, List[Dict]]:
+def load_yaml(yaml_str: str, path: str) -> Union[CommentedMap, CommentedSeq]:
     try:
-        yaml_file = yaml.safe_load(yaml_str)
-    except YAMLError as exc:
+        yaml_file = round_trip_load(yaml_str, preserve_quotes=True)
+    except ComposerError:
         logging.error(f'Failed to parse {path}. YAML invalid')
         exit(1)
     else:
         return yaml_file
 
 
-def read_yaml(path: str) -> List[Dict]:
+def read_yaml(path: str) -> Union[List[Dict], List[CommentedMap]]:
     decoded = []
 
     # 1. read the file
@@ -49,9 +49,12 @@ def read_yaml(path: str) -> List[Dict]:
         return decoded
 
     # 3. The file should be readable as is by yaml safe load
-    decoded = load_yaml(raw, path)
+    yaml_decoded = load_yaml(raw, path)
     # return list of dicts
-    if type(decoded) == dict:
-        decoded = [decoded]
+    if type(yaml_decoded) == CommentedMap:
+        decoded = [yaml_decoded]
+    elif type(yaml_decoded) == CommentedSeq:
+        for cm in yaml_decoded:
+            decoded.append(cm)
 
     return decoded

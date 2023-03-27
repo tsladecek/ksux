@@ -1,6 +1,8 @@
+import logging
+import sys
 from argparse import ArgumentParser
 
-import yaml
+from ruamel.yaml import round_trip_dump
 
 from .src.create_manifests import patch_manifests
 from .src.save_manifests import save_manifests
@@ -14,7 +16,7 @@ def main():
     parser.add_argument('-p', '--patches_dir',
                         help='Patches directory. Script will read only files with yaml/yml/json extensions')
     parser.add_argument('-e', '--out_ext', help='Extension of output files', choices=['yaml', 'json', 'yml'],
-                        default='yaml')
+                        default='json')
     parser.add_argument('--dry-run', help='Print manifests to stdout', action="store_true")
     parser.add_argument('--version', help='Package version', action="store_true")
 
@@ -27,12 +29,14 @@ def main():
     manifests = patch_manifests(base_dir=args.base_dir, patches_dir=args.patches_dir)
 
     if args.dry_run:
-        yaml_manifests = []
-
-        for m in manifests:
-            yaml_manifests.append(yaml.dump(m))
-
-        yaml_manifests = '---\n'.join(yaml_manifests)
-        print(yaml_manifests)
+        print('---')
+        for i, m in enumerate(manifests):
+            round_trip_dump(m, sys.stdout)
+            print('---')
     else:
         save_manifests(patched_manifests=manifests, out_dir=args.out_dir, extension=args.out_ext)
+
+    if args.out_ext in ['yaml', 'yml']:
+        logging.warning(
+            'Make sure to check the manifests, especially if your input was in json format and you had some "add" ops '
+            'in your patches. In this case it is impossible to preserve quotes correctly!')

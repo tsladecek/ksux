@@ -1,10 +1,9 @@
-import enum
 import json
 import logging
 import os.path
 from typing import List, Dict
 
-from yaml import dump
+from ruamel.yaml import round_trip_dump
 
 
 def save_manifests(
@@ -12,7 +11,6 @@ def save_manifests(
         out_dir: str,
         extension: str
 ) -> None:
-
     os.system(f'mkdir -p {out_dir}')
 
     for p in patched_manifests:
@@ -23,9 +21,9 @@ def save_manifests(
 
         with open(output_path, 'w') as f:
             if extension == 'json':
-                json.dump(p, f)
+                json.dump(p, f, indent=2)
             elif extension == 'yaml' or extension == 'yml':
-                f.write(dump(p))
+                round_trip_dump(p, f)
             else:
                 logging.error('Invalid extension. Allowed values are: json, yaml and yml')
                 exit(1)

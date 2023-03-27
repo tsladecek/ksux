@@ -16,7 +16,7 @@ spec:
         app: web
     spec:
       containers:
-        - image: nginx
+        - image: "nginx"
           name: nginx
           envFrom:
             - configMapRef:

@@ -1,9 +1,10 @@
 import logging
 import os
 from copy import copy
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from pydantic import ValidationError
+from ruamel.yaml import CommentedMap, CommentedSeq
 
 from .read_file import read_yaml, read_json
 from .schemas import Op, Patch, Action
@@ -42,10 +43,6 @@ def read_patches(patches_dir: str) -> List[Patch]:
         else:
             continue
 
-        if type(temp) != list:
-            logging.error('Patches File should be a list of patches')
-            exit(1)
-
         for pi in temp:
             validate_patch(patches, pi)
 
@@ -68,8 +65,7 @@ def get_real_path(patch: Patch, op: Op, manifest: dict):
     current_manifest = copy(manifest)
     path_real = []
     for pi, path_param in enumerate(path):
-        if type(current_manifest) == dict:
-
+        if type(current_manifest) in [dict, CommentedMap]:
             # If path_param is last this could be a valid option if op is ADD
             if pi == len(path) - 1 and path_param not in current_manifest:
                 current_manifest[path_param] = ''
@@ -81,7 +77,7 @@ def get_real_path(patch: Patch, op: Op, manifest: dict):
                     exit(1)
 
             path_real.append(path_param)
-        elif type(current_manifest) == list:
+        elif type(current_manifest) in [list, CommentedSeq]:
             # look for item with name == path_param
             idx = -1
             for i, item in enumerate(current_manifest):
@@ -100,7 +96,7 @@ def get_real_path(patch: Patch, op: Op, manifest: dict):
     return path_real
 
 
-def apply_patch(patch: Patch, op: Op, manifest: dict):
+def apply_patch(patch: Patch, op: Op, manifest: Union[Dict, CommentedMap]):
     """
     Applies patch and updates a manifest
     :param patch: Patch Object
@@ -115,14 +111,14 @@ def apply_patch(patch: Patch, op: Op, manifest: dict):
         temp = temp[i]
 
     if op.action == Action.replace:
-        if type(temp) == dict:
+        if type(temp) in [dict, CommentedMap]:
             temp[path_real[-1]] = op.value
         else:
             raise ValueError('Integer cant be last index for replace')
     elif op.action == Action.add:
-        if type(temp[path_real[-1]]) == dict:
+        if type(temp[path_real[-1]]) in [dict, CommentedMap]:
             temp[path_real[-1]].update(op.value)
-        elif type(temp[path_real[-1]]) == list:
+        elif type(temp[path_real[-1]]) in [dict, CommentedSeq]:
             temp[path_real[-1]].append(op.value)
         else:
             logging.error('Last index must map to a list or a dict')
