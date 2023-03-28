@@ -96,7 +96,7 @@ def get_real_path(patch: Patch, op: Op, manifest: dict):
     return path_real
 
 
-def apply_patch(patch: Patch, op: Op, manifest: Union[Dict, CommentedMap]):
+def apply_patch(patch: Patch, op: Op, manifest: Union[Dict, CommentedMap]) -> Union[Dict, CommentedMap]:
     """
     Applies patch and updates a manifest
     :param patch: Patch Object

@@ -3,7 +3,7 @@ import logging
 from json import JSONDecodeError
 from typing import Dict, List, Union
 
-from ruamel.yaml import round_trip_load, CommentedMap, CommentedSeq
+from ruamel.yaml import CommentedMap, CommentedSeq, YAML
 from ruamel.yaml.composer import ComposerError
 
 
@@ -22,8 +22,10 @@ def read_json(path: str) -> List[Dict]:
 
 
 def load_yaml(yaml_str: str, path: str) -> Union[CommentedMap, CommentedSeq]:
+    yaml = YAML()
+    yaml.preserve_quotes = True
     try:
-        yaml_file = round_trip_load(yaml_str, preserve_quotes=True)
+        yaml_file = yaml.load(yaml_str)
     except ComposerError:
         logging.error(f'Failed to parse {path}. YAML invalid')
         exit(1)

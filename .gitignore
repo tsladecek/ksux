@@ -6,3 +6,4 @@ examples/out/*.json
 out/
 dist/
 *egg-info*
+*.pytest_cache*
