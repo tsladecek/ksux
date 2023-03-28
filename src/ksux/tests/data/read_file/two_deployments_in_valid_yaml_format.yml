@@ -1,0 +1,41 @@
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: web
+    name: web
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: web
+    template:
+      metadata:
+        labels:
+          app: web
+      spec:
+        containers:
+          - image: "nginx"
+            name: nginx
+            envFrom:
+              - configMapRef:
+                  name: web
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: web-2
+    name: web-2
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: web-2
+    template:
+      metadata:
+        labels:
+          app: web-2
+      spec:
+        containers:
+          - image: nginx
+            name: nginx

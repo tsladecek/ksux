@@ -1,0 +1,33 @@
+---
+name: deployment_patches
+target:
+  apiVersion: apps/v1
+  kind: Deployment
+  name: web
+ops:
+  - name: replace_image
+    path: /spec/template/spec/containers/nginx/image
+    value: nginx:1.23
+    action: replace
+---
+name: deployment_patches
+target:
+  apiVersion: apps/v1
+  kind: Deployment
+  name: web
+ops:
+  - name: replace label
+    path: /metadata/labels/app
+    value: new-label
+    action: replace
+---
+name: deployment_patches
+target:
+  apiVersion: apps/v1
+  kind: Deployment
+  name: web-2
+ops:
+  - name: replace_image
+    path: /spec/template/spec/containers/nginx/image
+    value: nginx:1.20
+    action: replace

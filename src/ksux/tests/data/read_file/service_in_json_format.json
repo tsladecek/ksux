@@ -1,0 +1,28 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "svc",
+        "creationTimestamp": null,
+        "labels": {
+            "app": "svc"
+        }
+    },
+    "spec": {
+        "ports": [
+            {
+                "name": "80-80",
+                "protocol": "TCP",
+                "port": 80,
+                "targetPort": 80
+            }
+        ],
+        "selector": {
+            "app": "svc"
+        },
+        "type": "ClusterIP"
+    },
+    "status": {
+        "loadBalancer": {}
+    }
+}

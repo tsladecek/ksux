@@ -2,6 +2,7 @@ import enum
 from typing import Optional, Union, List
 
 from pydantic import BaseModel, validator
+from ruamel.yaml import CommentedSeq, CommentedMap
 
 
 class Target(BaseModel):
@@ -39,12 +40,12 @@ class Op(BaseModel):
 
     @validator('action')
     def check_value(cls, v, values, **kwargs):
-        if v == Action.add.name or v == Action.replace.name:
+        if v == Action.add or v == Action.replace:
             if 'value' not in values or values['value'] is None:
                 raise ValueError(f'Value needs to be present for action {v}')
 
-            # For add the value needs to be a json
-            if v == Action.add.name and type(values['value']) not in [list, dict]:
+            # For add the value needs to be an object
+            if v == Action.add and type(values['value']) not in [list, dict, CommentedMap, CommentedSeq]:
                 raise ValueError('For add, the value needs to be a dict or a list')
         return v
 
