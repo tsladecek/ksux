@@ -1,4 +1,4 @@
-# ksux
+# ksux  ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/tsladecek/ksux/test.yml?branch=main&label=tests&logo=GitHub) ![GitHub repo size](https://img.shields.io/github/repo-size/tsladecek/ksux) ![GitHub](https://img.shields.io/github/license/tsladecek/ksux) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/tsladecek/ksux?color=yellow&label=version&logo=GitHub) [![PyPI](https://img.shields.io/pypi/v/ksux?logo=Pypi)](https://pypi.org/project/ksux/) [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tsladecek/ksux?logo=Docker&sort=date)](https://hub.docker.com/r/tsladecek/ksux)
 
 A simple way for templating kubernetes manifests.
 
