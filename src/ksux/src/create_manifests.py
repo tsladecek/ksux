@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from .patch import read_patches, patch_manifest
 from .read_file import read_yaml, read_json
@@ -58,12 +58,12 @@ def read_manifests(base_dir: str) -> Dict:
     return manifests
 
 
-def patch_manifests(base_dir: str, patches_dir: str) -> List[Dict]:
+def patch_manifests(base_dir: str, patches_dir: str) -> Tuple[List[Dict], Dict]:
     """
     Patch all manifests
     :param base_dir: directory with manifest templates
     :param patches_dir: dire
-    :return:
+    :return: list of patched manifests + all manifests
     """
     manifests = read_manifests(base_dir=base_dir)
     patches = read_patches(patches_dir=patches_dir)
@@ -72,4 +72,4 @@ def patch_manifests(base_dir: str, patches_dir: str) -> List[Dict]:
     for patch in patches:
         patched.append(patch_manifest(patch, manifests))
 
-    return patched
+    return patched, manifests
