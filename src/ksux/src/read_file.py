@@ -39,7 +39,10 @@ def read_yaml(path: str) -> Union[List[Dict], List[CommentedMap]]:
     # 1. read the file
     with open(path) as f:
         # strip manifest divisor if it is in the beginning or in the end
-        raw = f.read()
+        raw = f.readlines()
+
+        # ignore comments
+        raw = ''.join([i for i in raw if not i.startswith('#')])
 
     # 2. Check if items are separated by "---"
     if "---" in raw:
