@@ -21,7 +21,7 @@ def save_manifests(
 
         with open(output_path, 'w') as f:
             if extension == 'json':
-                json.dump(p, f, indent=2)
+                json.dump(p, f, indent=2, ensure_ascii=False)
             elif extension == 'yaml' or extension == 'yml':
                 round_trip_dump(p, f)
             else:
