@@ -37,22 +37,8 @@ def main():
 
     final, all_manifests = patch_manifests(base_dir=args.base_dir, patches_dir=args.patches_dir)
 
-    # Create final list of manifests
-    if not args.patched_only:
-        versions = all_manifests.keys()
-        final = []
-
-        for v in versions:
-            version = all_manifests[v]
-            kinds = version.keys()
-            for k in kinds:
-                kind = version[k]
-                resource_names = kind.keys()
-
-                for r in resource_names:
-                    final.append(kind[r])
-
     if args.dry_run:
+        logging.info('Showing patched manifests.')
         if args.output_extension in ['yaml', 'yml']:
             print('---')
             for i, m in enumerate(final):
@@ -60,8 +46,22 @@ def main():
                 print('---')
         else:
             print(json.dumps(final))
-
     else:
+        # Create final list of manifests
+        if not args.patched_only:
+            versions = all_manifests.keys()
+            final = []
+
+            for v in versions:
+                version = all_manifests[v]
+                kinds = version.keys()
+                for k in kinds:
+                    kind = version[k]
+                    resource_names = kind.keys()
+
+                    for r in resource_names:
+                        final.append(kind[r])
+
         save_manifests(patched_manifests=final, out_dir=args.out_dir, extension=args.output_extension)
 
     if args.output_extension in ['yaml', 'yml']:

@@ -9,13 +9,6 @@ ops:
     path: /spec/template/spec/containers/nginx/image
     value: nginx:1.23
     action: replace
----
-name: deployment_patches
-target:
-  apiVersion: apps/v1
-  kind: Deployment
-  name: web
-ops:
   - name: replace label
     path: /metadata/labels/app
     value: new-label
@@ -31,3 +24,7 @@ ops:
     path: /spec/template/spec/containers/nginx/image
     value: nginx:1.20
     action: replace
+#  - name: increase replicas
+#    path: /spec/replicas
+#    value: 3
+#    action: replace
