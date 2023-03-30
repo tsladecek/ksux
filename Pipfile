@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pydantic = "*"
 "ruamel.yaml" = "*"
+mkdocs-material = "*"
 
 [dev-packages]
 pytest = "*"
