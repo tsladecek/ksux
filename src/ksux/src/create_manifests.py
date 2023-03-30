@@ -35,10 +35,11 @@ def add_manifest(manifests_index: dict, manifest: dict) -> None:
             manifests_index[apiVersion][kind][name] = manifest
 
 
-def read_manifests(base_dir: str) -> Dict:
+def read_manifests(base_dir: str, exclude: List[str] = []) -> Dict:
     """
     Read manifests from the base dir and create a manifest index
     :param base_dir: directory with manifest templates
+    :param exclude: exclude pattern ["{apiVersion}_{kind}_{name}", ...]
     :return: manifest index
     """
     manifests = {}
@@ -53,20 +54,22 @@ def read_manifests(base_dir: str) -> Dict:
             continue
 
         for manifest in temp:
-            add_manifest(manifests, manifest)
+            if f'{manifest["apiVersion"]}_{manifest["kind"]}_{manifest["metadata"]["name"]}' not in exclude:
+                add_manifest(manifests, manifest)
 
     return manifests
 
 
-def patch_manifests(base_dir: str, patches_dir: str) -> Tuple[List[Dict], Dict]:
+def patch_manifests(base_dir: str, patches_dir: str, exclude: List[str]) -> Tuple[List[Dict], Dict]:
     """
     Patch all manifests
     :param base_dir: directory with manifest templates
-    :param patches_dir: dire
+    :param patches_dir: patches directory
+    :param exclude: exclude pattern ["{apiVersion}_{kind}_{name}", ...]
     :return: list of patched manifests + all manifests
     """
-    manifests = read_manifests(base_dir=base_dir)
-    patches = read_patches(patches_dir=patches_dir)
+    manifests = read_manifests(base_dir=base_dir, exclude=exclude)
+    patches = read_patches(patches_dir=patches_dir, exclude=exclude)
 
     patched = []
     for patch in patches:

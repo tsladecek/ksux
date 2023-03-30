@@ -20,6 +20,11 @@ def main():
                         default='json')
     parser.add_argument('--patched_only', help='If all manifests should be saved, even those which were not patched',
                         action='store_true')
+    parser.add_argument('-x', '--exclude', help='Exclude one or more manifests. To target the manifest, argument '
+                                                'expects format: {apiVersion}_{kind}_{name}. E.g. if you wished to '
+                                                'exclude deployment with name "backend", the option would look like: '
+                                                'ksux -b ... -p ... -o ... -x apps/v1_Deployment_backend',
+                        action='append')
     parser.add_argument('--dry-run', help='Print manifests to stdout', action="store_true")
     parser.add_argument('-q', '--quiet', help='Do not print debug, info and warning messages', action='store_true')
     parser.add_argument('--version', help='Package version', action="store_true")
@@ -35,7 +40,16 @@ def main():
     else:
         logging.root.setLevel(logging.INFO)
 
-    final, all_manifests = patch_manifests(base_dir=args.base_dir, patches_dir=args.patches_dir)
+    exclude = [] if not args.exclude else args.exclude
+    # validate exclude
+    for e in exclude:
+        try:
+            apiVersion, kind, name = e.split('_')
+        except ValueError:
+            logging.error('Exclude items have to be in format: {apiVersion}_{kind}_{name}')
+            exit(1)
+
+    final, all_manifests = patch_manifests(base_dir=args.base_dir, patches_dir=args.patches_dir, exclude=exclude)
 
     if args.dry_run:
         logging.info('Showing patched manifests.')

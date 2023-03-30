@@ -10,7 +10,7 @@ from .read_file import read_yaml, read_json
 from .schemas import Op, Patch, Action
 
 
-def validate_patch(validated_patches: List[Patch], patch: dict) -> None:
+def validate_patch(patch: dict) -> Patch:
     """
     Validate patch
     :param validated_patches: list of validated_patches
@@ -23,13 +23,14 @@ def validate_patch(validated_patches: List[Patch], patch: dict) -> None:
         logging.error(f'Patch {patch} did not pass validation. See required fields')
         exit(1)
     else:
-        validated_patches.append(validated)
+        return validated
 
 
-def read_patches(patches_dir: str) -> List[Patch]:
+def read_patches(patches_dir: str, exclude: List[str] = []) -> List[Patch]:
     """
     Read and validate patches
     :param patches_dir: directory with patches
+    :param exclude: exclude pattern ["{apiVersion}_{kind}_{name}", ...]
     :return: list of patches
     """
     patches = []
@@ -44,7 +45,9 @@ def read_patches(patches_dir: str) -> List[Patch]:
             continue
 
         for pi in temp:
-            validate_patch(patches, pi)
+            validated = validate_patch(pi)
+            if f'{validated.target.apiVersion}_{validated.target.kind}_{validated.target.name}' not in exclude:
+                patches.append(validated)
 
     return patches
 
