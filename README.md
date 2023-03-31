@@ -1,6 +1,21 @@
-# ksux  ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/tsladecek/ksux/test.yml?branch=main&label=tests&logo=GitHub) ![GitHub repo size](https://img.shields.io/github/repo-size/tsladecek/ksux) ![GitHub](https://img.shields.io/github/license/tsladecek/ksux) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/tsladecek/ksux?color=yellow&label=version&logo=GitHub) [![PyPI](https://img.shields.io/pypi/v/ksux?logo=Pypi)](https://pypi.org/project/ksux/) [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tsladecek/ksux?logo=Docker&sort=date)](https://hub.docker.com/r/tsladecek/ksux)
+<p align="center">
+  <img src="misc/logo.svg" width="75%">
+</p>
 
-A simple way for templating kubernetes manifests.
+<p align=center>
+   <em>A simple way for templating kubernetes manifests.</em>
+</p>
+
+<p align=center>
+   <img src='https://img.shields.io/github/actions/workflow/status/tsladecek/ksux/test.yml?branch=main&label=tests&logo=GitHub' alt=''/>
+   <img src='https://img.shields.io/github/repo-size/tsladecek/ksux' alt=''/>
+   <img src='https://img.shields.io/github/license/tsladecek/ksux' alt='License: MIT'/>
+   <img src='https://img.shields.io/github/v/tag/tsladecek/ksux?color=yellow&label=version&logo=GitHub'/>
+   <a href='https://pypi.org/project/ksux/'><img src='https://img.shields.io/pypi/v/ksux?logo=Pypi'/></a>
+   <a href='https://hub.docker.com/r/tsladecek/ksux'><img src='https://img.shields.io/docker/image-size/tsladecek/ksux?logo=Docker&sort=date' /></a>
+</p>
+
+---
 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
@@ -10,8 +25,7 @@ A simple way for templating kubernetes manifests.
    1. [The `op.path`](#the-oppath)
 4. [Example](#example)
 
----
-tldr.
+**tldr.**
 
 ```shell
 ksux -b <path_to_base_dir> -p <path_to_patches_dir> -o <output_dir>
