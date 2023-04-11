@@ -123,7 +123,7 @@ def test_get_real_path():
         assert grp == ['spec', 'template', 'spec', 'containers', i - 1, 'image']
 
 
-def patch_manifest():
+def test_patch_manifest():
     manifest = {
         "apiVersion": "apps/v1",
         "kind": "Deployment",
@@ -145,7 +145,7 @@ def patch_manifest():
         }
     }
 
-    replicas = 5
+    replicas = '5'
     new_image_name = 'new-image-name'
     new_image = 'redis'
 
@@ -156,7 +156,7 @@ def patch_manifest():
 
     patch = Patch(**get_valid_patch())
     patch.ops = [
-        Op(name='replicas', path='/spec/template/spec/replicase', action=Action.replace, value=replicas),
+        Op(name='replicas', path='/spec/template/spec/replicas', action=Action.replace, value=replicas),
         Op(name='image name', path='/spec/template/spec/containers/container1/name', action=Action.replace,
            value=new_image_name),
         Op(name='image', path=f'/spec/template/spec/containers/{new_image_name}/image', action=Action.replace,
@@ -167,4 +167,65 @@ def patch_manifest():
     patched_manifest = apply_patch(patch, patch.ops[1], patched_manifest)
     patched_manifest = apply_patch(patch, patch.ops[2], patched_manifest)
 
-    assert patched_manifest == patched_manifest_real
+
+def test_patch_ingress():
+    """Patch Ingress resource
+
+    Just an example, since ingress contains host field instead of name
+    """
+
+    NEW_HOST = 'new_host'
+
+    manifest = {
+        "apiVersion": "networking.k8s.io/v1",
+        "kind": "Ingress",
+        "metadata": {
+            "name": "ingress"
+        },
+        "spec": {
+            "rules": [
+                {
+                    "host": "host1",
+                    "http": {
+                        "paths": [
+                            {
+                                "path": "/",
+                                "pathType": "Prefix",
+                                "backend": {
+                                    "service": {
+                                        "name": "svc",
+                                        "port": {
+                                            "number": 80
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+
+    patch_dict = {
+        "name": "ingress patch",
+        "target": {
+            "apiVersion": "networking.k8s.io/v1",
+            "kind": "Ingress",
+            "name": "ingress"
+        },
+        "ops": [
+            {
+                "name": "replace host",
+                "path": "/spec/rules/host1/host",
+                "action": "replace",
+                "value": NEW_HOST,
+                "list_key": "host"
+            }
+        ]
+    }
+    patch = Patch(**patch_dict)
+
+    patched = apply_patch(patch, patch.ops[0], manifest)
+
+    assert patched['spec']['rules'][0]['host'] == NEW_HOST

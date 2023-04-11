@@ -37,6 +37,7 @@ class Op(BaseModel):
     path: str
     value: Optional[Union[str, int, dict, list]]
     action: Action
+    list_key: str = 'name'
 
     @validator('action')
     def check_value(cls, v, values, **kwargs):

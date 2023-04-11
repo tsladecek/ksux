@@ -13,8 +13,7 @@ from .schemas import Op, Patch, Action
 def validate_patch(patch: dict) -> Patch:
     """
     Validate patch
-    :param validated_patches: list of validated_patches
-    :param patch:
+    :param patch: patch object
     :return:
     """
     try:
@@ -84,7 +83,7 @@ def get_real_path(patch: Patch, op: Op, manifest: dict):
             # look for item with name == path_param
             idx = -1
             for i, item in enumerate(current_manifest):
-                if item['name'] == path_param:
+                if item[op.list_key] == path_param:
                     idx = i
 
             if idx == -1:
