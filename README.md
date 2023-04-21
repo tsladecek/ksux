@@ -13,6 +13,7 @@
    <img src='https://img.shields.io/github/v/tag/tsladecek/ksux?color=yellow&label=version&logo=GitHub'/>
    <a href='https://pypi.org/project/ksux/'><img src='https://img.shields.io/pypi/v/ksux?logo=Pypi'/></a>
    <a href='https://hub.docker.com/r/tsladecek/ksux'><img src='https://img.shields.io/docker/image-size/tsladecek/ksux?logo=Docker&sort=date' /></a>
+   <a href='https://tsladecek.github.io/ksux/'><img src='https://img.shields.io/badge/Documentation-link-green' /></a>
 </p>
 
 ---
@@ -109,6 +110,7 @@ ops:
     path: <path to the part of the manifest to be patched>
     value: <value which should be replaced or added>
     action: <add|replace|remove>
+    list_key: <Optional - key by which an element in list should be targeted. Defaults to "name">
 ```
 
 each patch file can be a list of patches. You can use the classic yaml format, e.g.:
@@ -188,6 +190,9 @@ ksux -b <path_to_base_dir> -p <path_to_patches_dir> -o <output_dir>
 This will save all patched manifests to the output dir. You can use the `--dry-run` flag to print the patched
 manifests to stdout:
 
+**note**: By default, ksux will output patched manifests in `json` format. If you wish to output them in `yaml`, provide
+the `-e yaml` flag to the command below
+
 ```shell
 ksux -b <path_to_base_dir> -p <path_to_patches_dir> --dry-run
 ```
@@ -226,7 +231,68 @@ spec:
 ```
 
 To target the `https` service and change its name, you can specify the path: `/spec/ports/https/name` and then
-set the value to the new name 💪.
+set the value to the new name:
+
+```yaml
+name: service_patches
+target:
+  apiVersion: v1
+  kind: Service
+  name: nginx-service
+ops:
+- name: rename_https_port
+  path: /spec/ports/https/name
+  action: replace
+  value: new_name
+```
+
+---
+
+You can extend this even further. If you provide the `list_key` prop to a patch, you can target any list item with any
+key you wish to use. For example, lets say you have an ingress:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "domain.com"
+      http:
+        paths:
+        - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: backend
+              port:
+                number: 80
+```
+
+and you wish to use a different host in each of your environments. E.g. in `dev` environment, you would like the host to be `dev.domain.com`, in `staging` environment `staging.domain.com`, etc.
+
+You can easily write a patch for each such environment:
+
+```yaml
+name: ingress dev patches
+target:
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  name: ingress
+ops:
+  - name: replace host
+    path: /spec/rules/domain.com/host
+    action: replace
+    value: "dev.domain.com"
+    list_key: "host"
+```
+
+Ez 🙃
 
 ## Example
 
