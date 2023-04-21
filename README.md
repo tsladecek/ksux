@@ -13,6 +13,7 @@
    <img src='https://img.shields.io/github/v/tag/tsladecek/ksux?color=yellow&label=version&logo=GitHub'/>
    <a href='https://pypi.org/project/ksux/'><img src='https://img.shields.io/pypi/v/ksux?logo=Pypi'/></a>
    <a href='https://hub.docker.com/r/tsladecek/ksux'><img src='https://img.shields.io/docker/image-size/tsladecek/ksux?logo=Docker&sort=date' /></a>
+   <a href='https://tsladecek.github.io/ksux/'><img src='https://img.shields.io/badge/Documentation-link-green' /></a>
 </p>
 
 ---
