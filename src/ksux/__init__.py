@@ -48,7 +48,11 @@ def main():
         try:
             with open(args.exclude_file) as f:
                 for line in f.readlines():
-                    exclude.append(line.strip())
+                    res = line.strip()
+
+                    # ignore comments (lines starting with "#") and empty lines
+                    if res and not res.startswith('#'):
+                        exclude.append(res)
         except FileNotFoundError:
             logging.error(f'File {args.exclude_file} not found')
 
