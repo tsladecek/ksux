@@ -25,6 +25,8 @@ def main():
                                                 'exclude deployment with name "backend", the option would look like: '
                                                 'ksux -b ... -p ... -o ... -x apps/v1_Deployment_backend',
                         action='append')
+    parser.add_argument('-xf', '--exclude-file', help='File with a list of resources to be excluded. Resources'
+                                                      'must follow the format: {apiVersion}_{kind}_{name}')
     parser.add_argument('--dry-run', help='Print manifests to stdout', action="store_true")
     parser.add_argument('-q', '--quiet', help='Do not print debug, info and warning messages', action='store_true')
     parser.add_argument('--version', help='Package version', action="store_true")
@@ -41,6 +43,15 @@ def main():
         logging.root.setLevel(logging.INFO)
 
     exclude = [] if not args.exclude else args.exclude
+
+    if args.exclude_file:
+        try:
+            with open(args.exclude_file) as f:
+                for line in f.readlines():
+                    exclude.append(line.strip())
+        except FileNotFoundError:
+            logging.error(f'File {args.exclude_file} not found')
+
     # validate exclude
     for e in exclude:
         try:
