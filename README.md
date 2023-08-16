@@ -18,15 +18,17 @@
 
 ---
 
-1. [Requirements](#requirements)
-2. [Installation](#installation)
-   1. [Local](#local)
-   2. [Docker](#docker)
-3. [How does it work?](#how-does-it-work)
-   1. [The `op.path`](#the-oppath)
-4. [Example](#example)
+- [Requirements](#requirements)
+- [Installation](#installation)
+  - [Local](#local)
+  - [Docker](#docker)
+- [How does it work?](#how-does-it-work)
+  - [the `op.path`](#the-oppath)
+- [Example](#example)
 
-**tldr.**
+#### tldr
+
+***`ksux` reads `yaml` / `json` manifests in a `base/` directory and applies patches to them specified in the `patches/` directory. The output are patched manfests in the `output/` directory***
 
 ```shell
 ksux -b <path_to_base_dir> -p <path_to_patches_dir> -o <output_dir>
@@ -74,8 +76,7 @@ pip install ksux
 
 use the [docker image](https://hub.docker.com/r/tsladecek/ksux)
 
-To run the command inside a docker container, you need to make sure that all volumes are mapped to the container. Let's
-say that you have a following file structure:
+To run the command inside a docker container, you need to make sure that all volumes are mapped to the container. Let's say that you have a following file structure:
 
 ```shell
 |- /home/project
@@ -90,20 +91,19 @@ To generate patched manifests in the `/home/project/out` folder, run following c
 docker run --rm -v /home/project:/configs tsladecek/ksux ksux -b /configs/base -p /configs/patches -o /configs/out
 ```
 
-the important part is the `-v` flag, which will mount your local folder as volume to the container.
+the important part is the `-v` flag, which will mount your local folder as a volume to the container.
 
 ## How does it work?
 
-Let's say that you have many manifests in some directory (`base` directory) that you wish to patch with patches (in the
-`patches`) directory.
+Let's say that you have many manifests in some directory (`base` directory) that you wish to patch with patches (in the `patches` directory).
 
-Patches could be in `yaml` or `json` format (as well as your manifests). However, they must adhere to following schema:
+Patches could be in `yaml` or `json` format (as well as your manifests). However the patches **must** adhere to following schema:
 
 ```yaml
-name: <patch_description>
+name: <patch description>
 target:
   apiVersion: <apiVersion of targeted resource>
-  kind: <Deployment type of targeted resource>
+  kind: <kind of targeted resource>
   name: <name of targeted resource>
 ops:
   - name: <operation description>
@@ -116,7 +116,7 @@ ops:
 each patch file can be a list of patches. You can use the classic yaml format, e.g.:
 
 ```yaml
-- name: deployment_patches
+- name: deployment patches
   target:
     apiVersion: apps/v1
     kind: Deployment
@@ -126,7 +126,7 @@ each patch file can be a list of patches. You can use the classic yaml format, e
       path: /spec/template/spec/containers/nginx/image
       value: nginx:1.23
       action: replace
-- name: service_patches
+- name: service patches
   target:
     apiVersion: v1
     kind: Service
@@ -150,7 +150,7 @@ or use the `---` separator:
 
 ```yaml
 ---
-name: deployment_patches
+name: deployment patches
 target:
   apiVersion: apps/v1
   kind: Deployment
@@ -161,7 +161,7 @@ ops:
   value: nginx:1.23
   action: replace
 ---
-name: service_patches
+name: service patches
 target:
   apiVersion: v1
   kind: Service
@@ -187,17 +187,15 @@ Then all you need to do, is run:
 ksux -b <path_to_base_dir> -p <path_to_patches_dir> -o <output_dir>
 ```
 
-This will save all patched manifests to the output dir. You can use the `--dry-run` flag to print the patched
-manifests to stdout:
+**note**: By default, ksux will output patched manifests in `json` format. If you wish to output them in `yaml`, provide the `-e yaml` flag to the command above
 
-**note**: By default, ksux will output patched manifests in `json` format. If you wish to output them in `yaml`, provide
-the `-e yaml` flag to the command below
+This will save all patched manifests to the output dir. You can use the `--dry-run` flag to print the patched manifests to stdout:
 
 ```shell
 ksux -b <path_to_base_dir> -p <path_to_patches_dir> --dry-run
 ```
 
-For list of all options see:
+For a list of all options see:
 
 ```shell
 ksux --help
@@ -205,8 +203,7 @@ ksux --help
 
 ### the `op.path`
 
-This is a pretty cool thing. Similar to kustomize path, however you can target list item by names of child objects.
-E.g. say you have a list of ports in a service:
+This is the "bread and butter" of this package. Similar to kustomize path, however you **can** target list item by names of child objects. E.g. say you have a list of ports in a service:
 
 ```yaml
 apiVersion: v1
@@ -230,11 +227,10 @@ spec:
   type: ClusterIP
 ```
 
-To target the `https` service and change its name, you can specify the path: `/spec/ports/https/name` and then
-set the value to the new name:
+To target the `https` service and change its name, you can specify the path: `/spec/ports/https/name` and then set the value to the new name:
 
 ```yaml
-name: service_patches
+name: service patches
 target:
   apiVersion: v1
   kind: Service
@@ -248,8 +244,7 @@ ops:
 
 ---
 
-You can extend this even further. If you provide the `list_key` prop to a patch, you can target any list item with any
-key you wish to use. For example, lets say you have an ingress:
+You can extend this even further. If you provide the `list_key` prop to a patch, you can target any list item with any key you wish to use. For example, lets say you have an ingress:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -297,10 +292,8 @@ Ez 🙃
 ## Example
 
 In the `./examples` folder there are 3 sub-folders:
-    - `/examples/base` with deployment, service and a configmap manifests. These are the base manifests which we wish
-    to patch
-    - `/examples/patches` contain the patches (notice that both base kubernetes manifests and patches can be either in
-    `json` or `yml`/`yaml` format)
+    - `/examples/base` with deployment, service and a configmap manifests. These are the base manifests which we wish to patch
+    - `/examples/patches` contain the patches (notice that both base kubernetes manifests and patches can be either in `json` or `yml`/`yaml` format)
     - `/examples/out` is the output directory where the patched resources will be output
 
 First, we will `dry-run` the patching:
@@ -316,9 +309,8 @@ to the `output` folder:
 ksux -b examples/base -p examples/patches -o examples/out
 ```
 
-By default, the manifests will be saved in `yaml` format with `.yaml` extension. If you wish to use the `.yml` extension
-or save the manifests in `json` format, simply provide the `-e` flag with corresponding extension. E.g.:
+By default, the manifests will be saved in `json` format with `.json` extension. If you wish to  save the manifests in `yaml` format, simply provide the `-e` flag with corresponding extension. E.g.:
 
 ```shell
-ksux -b examples/base -p examples/patches -o examples/out -e json
+ksux -b examples/base -p examples/patches -o examples/out -e yaml
 ```
