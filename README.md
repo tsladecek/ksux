@@ -110,6 +110,7 @@ ops:
     path: <path to the part of the manifest to be patched>
     value: <value which should be replaced or added>
     action: <add|replace|remove>
+    enforce_integer: <Optional - bool. whether exported value must be an integer in output json. Defaults to "false">
     list_key: <Optional - key by which an element in list should be targeted. Defaults to "name">
 ```
 

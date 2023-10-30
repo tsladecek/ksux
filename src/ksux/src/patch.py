@@ -22,6 +22,13 @@ def validate_patch(patch: dict) -> Patch:
         logging.error(f'Patch {patch} did not pass validation. See required fields')
         exit(1)
     else:
+        for op in validated.ops:
+            if op.enforce_integer:
+                try:
+                    op.value = int(op.value)
+                except ValueError:
+                    logging.error(f'Cannot convert "{op.value}" to int for patch: {validated}')
+
         return validated
 
 

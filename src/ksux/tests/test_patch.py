@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 from pydantic import ValidationError
 
-from src.ksux.src.patch import read_patches, get_real_path, apply_patch
+from src.ksux.src.patch import read_patches, get_real_path, apply_patch, validate_patch
 from src.ksux.src.schemas import Patch, Op, Action
 from src.ksux.tests.config import settings
 
@@ -22,7 +22,8 @@ def get_valid_patch() -> dict:
                 "name": "example op",
                 "path": "/spec/replicas",
                 "action": "replace",
-                "value": 2
+                "value": "2",
+                "enforce_integer": False
             }
         ]
     }
@@ -31,6 +32,17 @@ def get_valid_patch() -> dict:
 def test_validate_patch_valid_patch():
     valid = get_valid_patch()
     assert Patch(**valid)
+
+    # Test enforce integer False
+    patch = get_valid_patch()
+    patch["ops"][0]["enforce_integer"] = False
+    validated = validate_patch(patch)
+    assert isinstance(validated.ops[0].value, str)
+
+    # Test enforce integer True
+    patch["ops"][0]["enforce_integer"] = True
+    validated = validate_patch(patch)
+    assert isinstance(validated.ops[0].value, int)
 
     # value can be omitted for action remove
     valid_patch_action_remove_missing_value = get_valid_patch()
