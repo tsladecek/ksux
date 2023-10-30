@@ -1,0 +1,11 @@
+name: horizontal pod autoscaler patch
+ops:
+- action: replace
+  name: replace max replicas value
+  path: /spec/maxReplicas
+  value: 3
+  enforce_integer: true
+target:
+  apiVersion: autoscaling/v2
+  kind: HorizontalPodAutoscaler
+  name: hpa
