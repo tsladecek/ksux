@@ -24,7 +24,7 @@ ops:
     path: /spec/template/spec/containers/nginx/image
     value: nginx:1.20
     action: replace
-#  - name: increase replicas
-#    path: /spec/replicas
-#    value: 3
-#    action: replace
+  - name: increase replicas
+    path: /spec/replicas
+    value: 3
+    action: replace
