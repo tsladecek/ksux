@@ -1,7 +1,7 @@
 import enum
 from typing import Optional, Union, List
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, ValidationInfo, field_validator
 from ruamel.yaml import CommentedSeq, CommentedMap
 
 
@@ -35,13 +35,14 @@ class Op(BaseModel):
     """
     name: str
     path: str
-    value: Optional[Union[str, int, dict, list]]
+    value: Union[str, int, dict, list] | None = None
     enforce_integer: bool = False
     action: Action
     list_key: str = 'name'
 
-    @validator('action')
-    def check_value(cls, v, values, **kwargs):
+    @field_validator('action')
+    def check_value(cls, v, info: ValidationInfo):
+        values = info.data
         if v == Action.add or v == Action.replace:
             if 'value' not in values or values['value'] is None:
                 raise ValueError(f'Value needs to be present for action {v}')

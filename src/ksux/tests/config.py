@@ -1,9 +1,7 @@
 import pathlib
 
-from pydantic import BaseSettings
 
-
-class Settings(BaseSettings):
+class Settings:
     PARENT = pathlib.Path(__file__).parent.resolve()
 
 
