@@ -35,7 +35,7 @@ class Op(BaseModel):
     """
     name: str
     path: str
-    value: Union[str, int, dict, list] | None = None
+    value: Optional[Union[str, int, dict, list]] = None
     enforce_integer: bool = False
     action: Action
     list_key: str = 'name'
